@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import {
-  ACCELERATION, CAR_COLOR, CAR_RIDE_HEIGHT, CAR_SIZE, CAR_START, FRICTION, FULL_STEER_SPEED,
+  ACCELERATION, CAR_MODEL_URL, CAR_MODEL_LENGTH, CAR_MODEL_YAW, CAR_START, FRICTION, FULL_STEER_SPEED,
   MAX_FORWARD_SPEED, MAX_REVERSE_SPEED, PLANET_RADIUS, TURN_RATE,
 } from './config'
-import { Y_AXIS, dirFromLatLon } from './utils'
+import { Y_AXIS, dirFromLatLon, loadModel } from './utils'
 
 const axis = new THREE.Vector3()
 const carUp = new THREE.Vector3()
@@ -18,13 +18,11 @@ export class Car {
     private speed = 0
 
     constructor() {
-        const body = new THREE.Mesh(
-            new THREE.BoxGeometry(CAR_SIZE.width, CAR_SIZE.height, CAR_SIZE.length),
-            new THREE.MeshStandardMaterial({ color: CAR_COLOR })
-        )
-        body.position.y = CAR_RIDE_HEIGHT
-        body.castShadow = true
-        this.mesh.add(body)
+        loadModel(CAR_MODEL_URL, CAR_MODEL_LENGTH).then(model => {
+            model.rotation.y = CAR_MODEL_YAW
+            this.mesh.add(model)
+        })
+        .catch(err => console.error('Car model failed to load:', err))
 
         const up = this.position.clone().normalize()
         const north = Y_AXIS.clone().addScaledVector(up, -Y_AXIS.dot(up)).normalize()

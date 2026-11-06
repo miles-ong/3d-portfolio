@@ -20,9 +20,9 @@ export const SHADOW_MAP_SIZE = 2048
 export const SHADOW_AREA = 30 // How much ground the car gets shadows
 
 // -- Car --
-export const CAR_COLOR = 'crimson'
-export const CAR_SIZE = { width: 1.0, height: 0.5, length: 2.0 }
-export const CAR_RIDE_HEIGHT = 0.4 // Height of the body's center above the ground
+export const CAR_MODEL_URL = 'src/assets/models/sedan.glb'
+export const CAR_MODEL_LENGTH = 2.2
+export const CAR_MODEL_YAW = 0
 export const CAR_START = { lat: 0, lon: 0 }
 export const ACCELERATION = 20
 export const FRICTION = 1.0
