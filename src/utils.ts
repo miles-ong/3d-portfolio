@@ -16,7 +16,23 @@ export function dirFromLatLon(latDeg: number, lonDeg: number) {
     )
 }
 
-export async function loadModel(url: string, targetSize: number) {
+export function surfaceFrame(dir: THREE.Vector3, yaw = 0) {
+    const up = dir.clone().normalize()
+    const north = Y_AXIS.clone().addScaledVector(up, -Y_AXIS.dot(up)).normalize()
+    const right = new THREE.Vector3().crossVectors(up, north)
+
+    return new THREE.Quaternion()
+    .setFromRotationMatrix(new THREE.Matrix4().makeBasis(right, up, north))
+    .multiply(new THREE.Quaternion().setFromAxisAngle(Y_AXIS, yaw))
+}
+
+/**
+ * 'longest' scales the model so its longest side (including height) equals targetSize.
+ * 'footprint' does the same using only width and length, which is what you want for buildings.
+ */
+export type ModelFit = 'longest' | 'footprint'
+
+export async function loadModel(url: string, targetSize: number, fit: ModelFit = 'longest') {
     const { scene: model } = await loader.loadAsync(url)
 
     model.traverse(obj => {
@@ -28,7 +44,8 @@ export async function loadModel(url: string, targetSize: number) {
 
     const box = new THREE.Box3().setFromObject(model)
     const size = box.getSize(new THREE.Vector3())
-    model.scale.setScalar(targetSize / Math.max(size.x, size.y, size.z))
+    const measured = fit === 'footprint' ? Math.max(size.x, size.z) : Math.max(size.x, size.y, size.z)
+    model.scale.setScalar(targetSize / measured)
 
     box.setFromObject(model)
     const center = box.getCenter(new THREE.Vector3())

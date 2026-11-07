@@ -20,9 +20,12 @@ export const SHADOW_MAP_SIZE = 2048
 export const SHADOW_AREA = 30 // How much ground the car gets shadows
 
 // -- Car --
-export const CAR_MODEL_URL = 'src/assets/models/sedan.glb'
+export const CAR_MODEL_URL = 'src/assets/models/cars/sedan.glb'
 export const CAR_MODEL_LENGTH = 2.2
 export const CAR_MODEL_YAW = 0
+export const CAR_COLLISION_RADIUS = 0.6
+export const CAR_COLLISION_OFFSETS = [-0.5, 0.5]
+export const CAR_BOUNCE = 0.5
 export const CAR_START = { lat: 0, lon: 0 }
 export const ACCELERATION = 20
 export const FRICTION = 1.0
@@ -47,31 +50,39 @@ export const KEYS = {
     left: ['KeyA', 'ArrowLeft'],
     right: ['KeyD', 'ArrowRight']
 } as const
-export const INTERACT_KEY = 'Enter'
+export const INTERACT_KEY = 'KeyE'
+export const SECONDARY_INTERACT_KEY = 'KeyF'
 
 // -- Links --
-export const ZONES = [
-    { name: 'GitHub', url: 'https://github.com/miles-ong', lat: 20, lon: 15 },
-    { name: 'DebugDiner', url: 'https://mayuriswatch.itch.io/debug-diner', lat: 20, lon: -15 },
-    { name: 'Cultivate', url: 'https://mayuriswatch.itch.io/cautionary-tale', lat: 20, lon: -15 },
-    { name: 'KurisuBot', url: 'https://github.com/miles-ong/KurisuBot', lat: 20, lon: 15 },
-    { name: 'Trust No 1', url: 'https://mayuriswatch.itch.io/trust-no-1', lat: 20, lon: 15 },
-    { name: 'Mini Cities', url: 'https://github.com/miles-ong/Mini-Cities-Beta', lat: 20, lon: 15 }
+export interface ZoneConfig {
+    name: string
+    description: string
+    url: string
+    urlLabel?: string
+    secondaryUrl?: string
+    secondaryUrlLabel?: string
+    model: string
+    size: number
+    yaw?: number
+    lat: number
+    lon: number
+} 
+export const ZONES: ZoneConfig[] = [
+    {
+        name: 'GitHub',
+        description: 'Hosts all my project\'s source code.',
+        url: 'https://github.com/miles-ong',
+        urlLabel: 'See repositories',
+        model: 'src/assets/models/pets/animal-cat.glb',
+        size: 8,
+        lat: 38,
+        lon: 0
+    }
 ]
-export const ZONE_TRIGGER_DISTANCE = 5
+export const ZONE_RADIUS_MULTIPLIER = 1.5
+export const MODEL_SINK = 0.15
 
-// ---------- Signs ----------
-export const SIGN_WIDTH = 4
-export const SIGN_HEIGHT = 3
-export const SIGN_DEPTH = 0.3
-export const SIGN_COLOR = '#ffd166'
-export const LABEL_TEXT_COLOR = '#222222'
-export const LABEL_FONT = 'bold 80px sans-serif'
-export const LABEL_CANVAS_WIDTH = 512 // Texture resolution; height follows the sign's shape
-export const LABEL_INSET = 0.1 // Gap between the label and the sign's edge
-
-// ---------- Interaction prompt ----------
-export const PROMPT_TEXT = 'Press Enter to open'
-export const PROMPT_STYLE =
-  'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);' +
-  'color:white;font:20px sans-serif;background:#0008;padding:8px 16px;border-radius:8px'
+// -- Tooltip --
+export const TOOLTIP_HEIGHT = 2.0
+export const DEFAULT_URL_LABEL = 'Open'
+export const DEFAULT_SECONDARY_URL_LABEL = 'Learn more'
